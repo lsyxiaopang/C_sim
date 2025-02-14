@@ -12,28 +12,32 @@ using namespace std;
 class p_bit
 {
 public:
-    uint8_t bit_now;//实际上这个是一位就足够了
-    uint8_t k;//标记这个pbit实际在多少位
-    uint8_t n;//系统总共有多少位
-    uint8_t Bi=0;//袁的修正中的Ai乘以256的结果
-    double Ai=0;//袁的修正，在确认量化前可以的时候先使用这个
-    uint32_t uAi=0;
-    float tem=6e11;
-    bool process_yuan;//采用袁的方法来处理Ik
-    bool process_jung;//采用jung的方法处理Ek//TODO 还未实现
+    uint8_t bit_now;//标记当前的pBit为1/0
+    uint8_t k;//标记这个pBit所在的位
+    uint8_t n;//系统总共有的位数（用来带入计算公式）
+    
+    //A（指数）的表达式为A=(1-uAi)*Ene/tem
+    
+    //&&&&&&&&&&&&&&&&&&&&&&&&&以下参数记得修改
+    double Ai=0.1;//局域温度参数，局域温度的更新满足规则：uAi=(1-Ai)*uAi+Ai*bit_now//&&&&&
+    float tem=2e8;//背景温度值//&&&&&使用时记得修改
+    //&&&&&&&&&&&&&&&&&&&&&&&&&一下参数记得修改
+    
+    float uAi=0;//局域温度值
+    bool process_yuan;//判断是否用局域温度的方法来计算Ik
     
     void refresh_bit(int64_t NXY_Y,int64_t Y2,bool inverse);//从已有的数据更新这个pbit的数据
     
-    p_bit(int kv,int nv,bool pjung=false,bool pyuan=true):bit_now(0),k(kv),n(nv),process_jung(pjung),process_yuan(pyuan){};
+    p_bit(int kv,int nv,bool pyuan=true):bit_now(0),k(kv),n(nv),process_yuan(pyuan){};//初始化pBit系统，可以初始化当前pbit所在的位置
+    //@@@@@注意：温度和局域温度参数需要在前文进行修改！！！
 
-    p_bit():bit_now(0),k(0),n(0),process_jung(false),process_yuan(false){};
+    p_bit():bit_now(0),k(0),n(0),process_yuan(false){};
     
 private:
     uint16_t get_sigmoid(int8_t Ik);//从已经归一化的Ik中得到对应的sigmoid值
     int8_t get_inverse_sigmoid(uint16_t rand);//验证---当前所使用的随机数处理方法（将11位随机数变化为8位值）是否可行
     int8_t get_Ik1(int64_t NXY_Y,int64_t Y2);//从计算出来的两个部分得到Ik1
-    int8_t get_Ik2(int8_t get_Ik1);//基于袁的方法，对Ik进行再次处理
 };
 
-uint64_t get_X(p_bit* p_bitsx,uint8_t n);
+uint64_t get_X(p_bit* p_bitsx,uint8_t n);//将pBit数组整合为一个数字
 
