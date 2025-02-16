@@ -5,7 +5,7 @@
 //  Created by songyu li on 2025/1/1.
 //
 
-#define AB_len 12//两个分解出来的位数
+#define AB_len 15//两个分解出来的位数
 
 #include <iostream>
 #include <fstream>
@@ -40,12 +40,12 @@ uint64_t one_batch(int64_t N,bool process_yuan)
         {
             A[AB_len-2-i].refresh_bit((N-x*y)*y, y*y,true);
             x=get_X(A,AB_len);
-//            y=get_X(B,AB_len);
+            y=get_X(B,AB_len);
         }
         for(int i=0;i<AB_len-1;i++)
         {
             B[AB_len-2-i].refresh_bit((N-x*y)*x, x*x,true);
-//            x=get_X(A,AB_len);
+            x=get_X(A,AB_len);
             y=get_X(B,AB_len);
         }
         step++;
@@ -57,21 +57,14 @@ uint64_t one_batch(int64_t N,bool process_yuan)
 int main(int argc, const char * argv[]) {
     cout<<"RAND max:"<<RAND_MAX<<endl;
     cout<<"TEST MESSAGE!!"<<endl;
-//    float a=0;
-//    for(int i=0;i<100;i++)
-//    {
-//        a=a*exp(-0.1)+(1-exp(-0.1));
-//        cout<<1-a<<endl;
-//    }
-    
     srand(static_cast<unsigned int>(time(0)));
     uint64_t steps=0;
-    ofstream file_out("lab_rough.txt");
+    ofstream file_out("S_586010531_6e11_0.01_7.txt");
     if (!file_out)
         return 1;
-    for(int i=0;i<50000;i++)
+    for(int i=0;i<5000;i++)
     {
-        steps=one_batch(12337337, true);
+        steps=one_batch(586010531, true);
 //        steps=one_batch(136061, false);
 //        steps=one_batch(5*7, false);
         file_out<<steps<<endl;
