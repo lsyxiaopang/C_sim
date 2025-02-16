@@ -59,13 +59,13 @@ int main(int argc, const char * argv[]) {
     cout<<"TEST MESSAGE!!"<<endl;
     srand(static_cast<unsigned int>(time(0)));
     uint64_t steps=0;
-    ofstream file_out("S_586010531_6e11_0.01_7.txt");
+    ofstream file_out("S_586010531_1e10_0.1_c_4.txt");
     if (!file_out)
         return 1;
     for(int i=0;i<5000;i++)
     {
         steps=one_batch(586010531, true);
-//        steps=one_batch(136061, false);
+//        steps=one_batch(12337337, true);
 //        steps=one_batch(5*7, false);
         file_out<<steps<<endl;
         cout<<"Factor count:"<<i<<endl;

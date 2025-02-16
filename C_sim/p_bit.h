@@ -19,11 +19,11 @@ public:
     //A（指数）的表达式为A=(1-uAi)*Ene/tem
     
     //&&&&&&&&&&&&&&&&&&&&&&&&&以下参数记得修改
-    double Ai=0.01;//局域温度参数，局域温度的更新满足规则：uAi=(1-Ai)*uAi+Ai*bit_now//&&&&&
-    double tem=6e11;//背景温度值//&&&&&使用时记得修改
+    float Ai=0.1;//局域温度参数，局域温度的更新满足规则：uAi=(1-Ai)*uAi+Ai*bit_now//&&&&&
+    float tem=1e10;//背景温度值//&&&&&使用时记得修改
     //&&&&&&&&&&&&&&&&&&&&&&&&&一下参数记得修改
     
-    double uAi=0;//局域温度值
+    float uAi=0;//局域温度值
     bool process_yuan;//判断是否用局域温度的方法来计算Ik
     
     void refresh_bit(int64_t NXY_Y,int64_t Y2,bool inverse);//从已有的数据更新这个pbit的数据
@@ -34,8 +34,8 @@ public:
     p_bit():bit_now(0),k(0),n(0),process_yuan(false){};
     
 private:
-    double get_inverse_sigmoid(uint16_t rand);//验证---当前所使用的随机数处理方法（将11位随机数变化为8位值）是否可行
-    double get_Ik1(int64_t NXY_Y,int64_t Y2);//从计算出来的两个部分得到Ik1
+    int8_t get_inverse_sigmoid(uint16_t rand);//验证---当前所使用的随机数处理方法（将11位随机数变化为8位值）是否可行
+    int8_t get_Ik1(int64_t NXY_Y,int64_t Y2);//从计算出来的两个部分得到Ik1
 };
 
 uint64_t get_X(p_bit* p_bitsx,uint8_t n);//将pBit数组整合为一个数字
