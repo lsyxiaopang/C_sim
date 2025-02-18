@@ -37,10 +37,10 @@ int8_t p_bit::get_Ik1(int64_t NXY_Y, int64_t Y2)
     //以下部分是用于检查是否出现越界的情况
     //TODO 在FPGA中研究如何防止该种越界的发生
     int8_t bak;
-    if(Ik1>127)
-        bak=127;
-    else if (Ik1<-127)
-        bak=-127;
+    if(Ik1>126)
+        bak=126;
+    else if (Ik1<-126)
+        bak=-126;
     else
         bak=(int8_t)Ik1;
     
