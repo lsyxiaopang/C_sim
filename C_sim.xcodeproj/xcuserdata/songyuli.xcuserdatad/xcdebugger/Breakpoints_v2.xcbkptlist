@@ -46,8 +46,8 @@
             filePath = "C_sim/p_bit.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "34"
-            endingLineNumber = "34"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
             landmarkName = "p_bit::get_Ik1(NXY_Y, Y2)"
             landmarkType = "7">
          </BreakpointContent>

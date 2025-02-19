@@ -13,11 +13,11 @@ int8_t p_bit::get_Ik1(int64_t NXY_Y, int64_t Y2)
 
     //这里不再使用移位法，而是用更加直接的除法（除法使用常见的可以移位的东西计算，以保证可实现性）
     
-    float s1=(float)(NXY_Y<<(this->k+1));
-    float s2=(float)(Y2<<(2*(this->k)));
-    s1=16*s1/this->tem;//@@@@@注意：此处的数据被乘了16
-    s2=16*s2/this->tem;//@@@@@注意：此处的数据被乘了16
-    float Ik1;
+    int64_t s1=(NXY_Y<<(this->k+1));
+    int64_t s2=(Y2<<(2*(this->k)));
+    s1=(s1>>tem_m[0])+(s1>>tem_m[1])+(s1>>tem_m[2]);//@@@@@注意：此处的数据被乘了16
+    s2=(s2>>tem_m[0])+(s2>>tem_m[1])+(s2>>tem_m[2]);//@@@@@注意：此处的数据被乘了16
+    int64_t Ik1;
     
     if(this->bit_now==1)
     {
@@ -27,11 +27,13 @@ int8_t p_bit::get_Ik1(int64_t NXY_Y, int64_t Y2)
     {
         Ik1=s1-s2;
     }
-    
-    uAi=uAi*(1.0-Ai)+Ai*(1-this->bit_now)*0.9999;
+//    uAi=uAi*(1.0-Ai)+Ai*(1-this->bit_now)*0.9999;//此为在float版本下的数据
+    int addvalue=(1<<20)+(1<<19);
+    uAi=uAi-(uAi>>4)-(uAi>>5)+(addvalue-(addvalue>>14)-(addvalue>>15))*(1-this->bit_now);
     if(this->process_yuan)
     {
-        Ik1=Ik1*(1.0-uAi);
+        Ik1=Ik1*((1<<24)-uAi);
+        Ik1=(Ik1>>24);
     }
 
     //以下部分是用于检查是否出现越界的情况
