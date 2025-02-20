@@ -38,13 +38,13 @@ uint64_t one_batch(int64_t N,bool process_yuan)
         }
         for(int i=0;i<AB_len-1;i++)
         {
-            A[AB_len-2-i].refresh_bit((N-x*y)*y, y*y,true);
+            A[i].refresh_bit((N-x*y)*y, y*y,true);
             x=get_X(A,AB_len);
             y=get_X(B,AB_len);
         }
         for(int i=0;i<AB_len-1;i++)
         {
-            B[AB_len-2-i].refresh_bit((N-x*y)*x, x*x,true);
+            B[i].refresh_bit((N-x*y)*x, x*x,true);
             x=get_X(A,AB_len);
             y=get_X(B,AB_len);
         }
@@ -59,7 +59,7 @@ int main(int argc, const char * argv[]) {
     cout<<"TEST MESSAGE!!"<<endl;
     srand(static_cast<unsigned int>(time(0)));
     uint64_t steps=0;
-    ofstream file_out("S_586010531_1e10_0.1_5.txt");
+    ofstream file_out("S_586010531_1e10_0.1_7.txt");
     
     if (!file_out)
         return 1;

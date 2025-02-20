@@ -39,15 +39,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "66F7B24A-6575-451C-BB9E-ED9D06ED48EF"
-            shouldBeEnabled = "No"
+            uuid = "6DCF5DD0-69E2-4F3D-BD4F-0C7EDE874E58"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "C_sim/p_bit.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "35"
-            endingLineNumber = "35"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
             landmarkName = "p_bit::get_Ik1(NXY_Y, Y2)"
             landmarkType = "7">
          </BreakpointContent>
