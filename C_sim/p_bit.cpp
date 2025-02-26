@@ -29,8 +29,6 @@ int8_t p_bit::get_Ik1(int64_t NXY_Y, int64_t Y2)
     }
     Ik1=(Ik1>>tem_m[0])+(Ik1>>tem_m[1])+(Ik1>>tem_m[2]);
 //    uAi=uAi*(1.0-Ai)+Ai*(1-this->bit_now)*0.9999;//此为在float版本下的数据
-    uint32_t addvalue=(1<<20)+(1<<19);
-    uAi=uAi-(uAi>>4)-(uAi>>5)+(addvalue-(addvalue>>14)-(addvalue>>15))*(1-this->bit_now);
     if(this->process_yuan)
     {
         Ik1=Ik1*((1<<24)-uAi);
@@ -40,8 +38,8 @@ int8_t p_bit::get_Ik1(int64_t NXY_Y, int64_t Y2)
     //以下部分是用于检查是否出现越界的情况
     //TODO 在FPGA中研究如何防止该种越界的发生
     int8_t bak;
-    if(Ik1>126)
-        bak=126;
+    if(Ik1>127)
+        bak=127;
     else if (Ik1<-127)
         bak=-127;
     else
@@ -53,10 +51,10 @@ int8_t p_bit::get_Ik1(int64_t NXY_Y, int64_t Y2)
 int8_t p_bit::get_inverse_sigmoid(uint16_t rand)
 {
     //在最新的实现方式中，我们是采用了反函数的形式
-    float nrand=(float)(rand%2048);
-    float inv=log(2048/nrand-1)*16-1;//@@@@@注意：这里针对的也是乘了16的情况
-    if(inv>126)
-        inv=126;
+    float nrand=(float)(rand%2048)+0.1;
+    float inv=log(2048/nrand-1)*16;//@@@@@注意：这里针对的也是乘了16的情况
+    if(inv>127)
+        inv=127;
     else if(inv<-128)
         inv=-128;
     return (int8_t)inv;
@@ -79,6 +77,8 @@ void p_bit::refresh_bit(int64_t NXY_Y, int64_t Y2,bool inverse=false)
         else
             this->bit_now=0;
     }
+    uint32_t addvalue=(1<<20)+(1<<19);
+    uAi=uAi-(uAi>>4)-(uAi>>5)+(addvalue-(addvalue>>14)-(addvalue>>15))*(1-this->bit_now);
 }
 
 uint64_t get_X(p_bit* ps,uint8_t n)

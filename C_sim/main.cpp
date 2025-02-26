@@ -24,33 +24,42 @@ uint64_t one_batch(int64_t N,bool process_yuan)
     for(int i=0;i<AB_len-1;i++)
         B[i]=p_bit(i+1, AB_len*2,process_yuan);
 
-    uint64_t ans;
+    uint64_t ans=0;
     uint64_t step=0;
     while (true) {
 //        分为三步：1.检查 2.更新A 3.更新B
         int64_t x=get_X(A, AB_len);
         int64_t y=get_X(B,AB_len);
 
-        if(x*y==N)
-        {
-            ans=x;
-            break;
-        }
+        
         for(int i=0;i<AB_len-1;i++)
         {
+//            if((N%x)==0||(N%y)==0)
+            if(x*y==N)
+            {
+                ans=x;
+                goto ready;
+            }
             A[i].refresh_bit((N-x*y)*y, y*y,true);
             x=get_X(A,AB_len);
             y=get_X(B,AB_len);
-        }
+       }
         for(int i=0;i<AB_len-1;i++)
         {
+//            if((N%x)==0||(N%y)==0)
+            if(x*y==N)
+            {
+                ans=x;
+                goto ready;
+            }
             B[i].refresh_bit((N-x*y)*x, x*x,true);
             x=get_X(A,AB_len);
             y=get_X(B,AB_len);
         }
         step++;
+//        if((N%x)==0||(N%y)==0)
     }
-    cout<<"Get answer:"<<ans<<endl;
+ready:  cout<<"Get answer:"<<ans<<endl;
     return step;
 }
 
@@ -59,13 +68,13 @@ int main(int argc, const char * argv[]) {
     cout<<"TEST MESSAGE!!"<<endl;
     srand(static_cast<unsigned int>(time(0)));
     uint64_t steps=0;
-    ofstream file_out("S_586010531_1e10_0.1_7.txt");
+    ofstream file_out("S_604947121_1e10_0.1_13.txt");
     
     if (!file_out)
         return 1;
     for(int i=0;i<500;i++)
     {
-        steps=one_batch(586010531, true);
+        steps=one_batch(604947121, true);
 //        steps=one_batch(12337337, true);
 //        steps=one_batch(5*7, false);
         file_out<<steps<<endl;
