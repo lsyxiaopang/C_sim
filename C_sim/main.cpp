@@ -15,14 +15,20 @@
 
 using namespace std;
 
-uint64_t one_batch(int64_t N,bool process_yuan)
+uint64_t seed_values[28]={
+    20,21,22,23,24,25,26,27,28,29,30,31,32,33,
+    40,41,42,43,44,45,46,47,48,49,50,51,52,53
+    
+};
+
+uint64_t one_batch(int64_t N,bool process_yuan,int c)
 {
     p_bit A[AB_len-1];
     for(int i=0;i<AB_len-1;i++)
-        A[i]=p_bit(i+1, AB_len*2,process_yuan);//注意修改温度
+        A[i]=p_bit(i+1, AB_len*2,seed_values[i]+c,process_yuan);//注意修改温度
     p_bit B[AB_len-1];
     for(int i=0;i<AB_len-1;i++)
-        B[i]=p_bit(i+1, AB_len*2,process_yuan);
+        B[i]=p_bit(i+1, AB_len*2,seed_values[i+14]+c,process_yuan);
 
     uint64_t ans=0;
     uint64_t step=0;
@@ -68,13 +74,13 @@ int main(int argc, const char * argv[]) {
     cout<<"TEST MESSAGE!!"<<endl;
     srand(static_cast<unsigned int>(time(0)));
     uint64_t steps=0;
-    ofstream file_out("S_604947121_1e10_0.1_13.txt");
+    ofstream file_out("S_584460367_1e10_0.1_4.txt");
     
     if (!file_out)
         return 1;
     for(int i=0;i<500;i++)
     {
-        steps=one_batch(604947121, true);
+        steps=one_batch(584460367, true,i);
 //        steps=one_batch(12337337, true);
 //        steps=one_batch(5*7, false);
         file_out<<steps<<endl;

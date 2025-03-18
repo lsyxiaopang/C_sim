@@ -14,9 +14,9 @@
             filePath = "C_sim/main.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
-            landmarkName = "one_batch(N, process_yuan)"
+            startingLineNumber = "68"
+            endingLineNumber = "68"
+            landmarkName = "one_batch(N, process_yuan, c)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -30,9 +30,9 @@
             filePath = "C_sim/main.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37"
-            landmarkName = "one_batch(N, process_yuan)"
+            startingLineNumber = "43"
+            endingLineNumber = "43"
+            landmarkName = "one_batch(N, process_yuan, c)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -49,6 +49,22 @@
             startingLineNumber = "29"
             endingLineNumber = "29"
             landmarkName = "p_bit::get_Ik1(NXY_Y, Y2)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "AFA85E87-3FB5-4812-B324-35BEF1C7D066"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "C_sim/p_bit.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "p_bit::get_inverse_sigmoid(rand)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

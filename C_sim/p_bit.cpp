@@ -28,6 +28,8 @@ int8_t p_bit::get_Ik1(int64_t NXY_Y, int64_t Y2)
         Ik1=s1-s2;
     }
     Ik1=(Ik1>>tem_m[0])+(Ik1>>tem_m[1])+(Ik1>>tem_m[2]);
+    uint32_t addvalue=(1<<20)+(1<<19);
+    uAi=uAi-(uAi>>4)-(uAi>>5)+(addvalue-(addvalue>>14)-(addvalue>>15))*(1-this->bit_now);
 //    uAi=uAi*(1.0-Ai)+Ai*(1-this->bit_now)*0.9999;//此为在float版本下的数据
     if(this->process_yuan)
     {
@@ -51,7 +53,8 @@ int8_t p_bit::get_Ik1(int64_t NXY_Y, int64_t Y2)
 int8_t p_bit::get_inverse_sigmoid(uint16_t rand)
 {
     //在最新的实现方式中，我们是采用了反函数的形式
-    float nrand=(float)(rand%2048)+0.1;
+//    float nrand=(float)(rand%2048);
+    float nrand=lfsr_generate();
     float inv=log(2048/nrand-1)*16;//@@@@@注意：这里针对的也是乘了16的情况
     if(inv>127)
         inv=127;
@@ -77,9 +80,27 @@ void p_bit::refresh_bit(int64_t NXY_Y, int64_t Y2,bool inverse=false)
         else
             this->bit_now=0;
     }
-    uint32_t addvalue=(1<<20)+(1<<19);
-    uAi=uAi-(uAi>>4)-(uAi>>5)+(addvalue-(addvalue>>14)-(addvalue>>15))*(1-this->bit_now);
+
 }
+
+uint32_t p_bit::lfsr_generate() {
+    // 计算反馈位（多项式：x^48 + x^21 + x^20 + x^5 + 1）
+    uint8_t feedback = (
+        (random_val >> 47) ^
+        (random_val >> 32) ^
+        (random_val >> 16) ^
+        (random_val >> 8) ^
+        (random_val >> 1) ^
+        (random_val )     
+    ) & 1;
+
+    // 收集移出的最低位（右移操作）
+    random_val = (random_val << 1)|feedback;  // 左移拼接新位
+    return random_val%2048;
+}
+
+
+
 
 uint64_t get_X(p_bit* ps,uint8_t n)
 {
