@@ -33,7 +33,7 @@ int8_t p_bit::get_Ik1(int64_t NXY_Y, int64_t Y2)
 //    uAi=uAi*(1.0-Ai)+Ai*(1-this->bit_now)*0.9999;//此为在float版本下的数据
     if(this->process_yuan)
     {
-        Ik1=Ik1*((1<<24)-uAi);
+        Ik1=Ik1<<((int)log2((1<<24)-uAi));//使用指数近似
         Ik1=(Ik1>>24);
     }
 
@@ -63,8 +63,9 @@ int8_t p_bit::get_inverse_sigmoid(uint16_t rand)
     return (int8_t)inv;
 }
 
-void p_bit::refresh_bit(int64_t NXY_Y, int64_t Y2,bool inverse=false)
+int p_bit::refresh_bit(int64_t NXY_Y, int64_t Y2,bool inverse=false)
 {
+    int bak_s=1;
     //完成对p-bit的一次更新
     uint16_t this_rand=rand()%65535;
     int8_t Ik1=this->get_Ik1(NXY_Y, Y2);//首先拿到A的值（已经乘了16）
@@ -76,11 +77,19 @@ void p_bit::refresh_bit(int64_t NXY_Y, int64_t Y2,bool inverse=false)
     {
         int8_t rand_sig_inv=this->get_inverse_sigmoid(this_rand);
         if(Ik1>rand_sig_inv)
+        {
+            if(this->bit_now==0)
+                bak_s=0;
             this->bit_now=1;
+        }
         else
+        {
+            if(this->bit_now==1)
+                bak_s=2;
             this->bit_now=0;
+        }
     }
-
+    return bak_s;
 }
 
 uint32_t p_bit::lfsr_generate() {

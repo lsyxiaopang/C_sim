@@ -21,6 +21,12 @@ uint64_t seed_values[28]={
     
 };
 
+int64_t update_NXYY(int64_t N_XYY_o,int64_t Y2,int k,int s)
+{
+    int64_t y2k=(Y2<<k);
+    return N_XYY_o-(1-s)*y2k;
+}
+
 uint64_t one_batch(int64_t N,bool process_yuan,int c)
 {
     p_bit A[AB_len-1];
@@ -34,33 +40,36 @@ uint64_t one_batch(int64_t N,bool process_yuan,int c)
     uint64_t step=0;
     while (true) {
 //        分为三步：1.检查 2.更新A 3.更新B
-        int64_t x=get_X(A, AB_len);
-        int64_t y=get_X(B,AB_len);
+        int64_t x0=get_X(A, AB_len);
+        int64_t y0=get_X(B,AB_len);
 
-        
+        int64_t N_XYY=(N-x0*y0)*y0;
+        int64_t Y2=y0*y0;
         for(int i=0;i<AB_len-1;i++)
         {
 //            if((N%x)==0||(N%y)==0)
-            if(x*y==N)
+            if(N_XYY==0)
             {
-                ans=x;
+                ans=x0;//x0 is wrong!!!
                 goto ready;
             }
-            A[i].refresh_bit((N-x*y)*y, y*y,true);
-            x=get_X(A,AB_len);
-            y=get_X(B,AB_len);
+            int s=A[i].refresh_bit(N_XYY,Y2,true);
+            N_XYY=update_NXYY(N_XYY, Y2, i+1, s);//更新系统的能量取值
        }
+        x0=get_X(B,AB_len);
+        y0=get_X(A,AB_len);
+        N_XYY=(N-x0*y0)*y0;
+        Y2=y0*y0;
         for(int i=0;i<AB_len-1;i++)
         {
 //            if((N%x)==0||(N%y)==0)
-            if(x*y==N)
+            if(N_XYY==0)
             {
-                ans=x;
+                ans=x0;//x0 is wrong!!!
                 goto ready;
             }
-            B[i].refresh_bit((N-x*y)*x, x*x,true);
-            x=get_X(A,AB_len);
-            y=get_X(B,AB_len);
+            int s=B[i].refresh_bit(N_XYY,Y2,true);
+            N_XYY=update_NXYY(N_XYY, Y2, i+1, s);
         }
         step++;
 //        if((N%x)==0||(N%y)==0)
@@ -74,13 +83,13 @@ int main(int argc, const char * argv[]) {
     cout<<"TEST MESSAGE!!"<<endl;
     srand(static_cast<unsigned int>(time(0)));
     uint64_t steps=0;
-    ofstream file_out("S_584460367_1e10_0.1_4.txt");
+    ofstream file_out("S_705535069_1e10_0.1_5.txt");
     
     if (!file_out)
         return 1;
     for(int i=0;i<500;i++)
     {
-        steps=one_batch(584460367, true,i);
+        steps=one_batch(705535069, true,i);
 //        steps=one_batch(12337337, true);
 //        steps=one_batch(5*7, false);
         file_out<<steps<<endl;

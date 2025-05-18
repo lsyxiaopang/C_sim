@@ -28,7 +28,7 @@ public:
     int uAi=0;//局域温度值
     bool process_yuan;//判断是否用局域温度的方法来计算Ik
     
-    void refresh_bit(int64_t NXY_Y,int64_t Y2,bool inverse);//从已有的数据更新这个pbit的数据
+    int refresh_bit(int64_t NXY_Y,int64_t Y2,bool inverse);//从已有的数据更新这个pbit的数据 并且返回更新信息
     
     uint32_t lfsr_generate();
     
