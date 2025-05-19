@@ -40,15 +40,15 @@ int64_t p_bit::get_Ik1_int(int64_t NXY_Y, int64_t Y2)
         float fuAi=(float)((1<<24)-uAi)/(1<<24);
         Ik1=(int64_t)((float)Ik1*fuAi);
     }
-    int8_t bak;
+    int16_t bak;
     if(P_sigmoid_approx)
     {
         if(Ik1>127)
-            bak=P_approx_max;
+            bak=(int16_t)P_approx_max;
         else if (Ik1<-127)
-            bak=-P_approx_max;
+            bak=(int16_t)(-P_approx_max);
         else
-            bak=(int8_t)Ik1;
+            bak=(int16_t)Ik1;
         return bak;
     }
     else
@@ -76,7 +76,7 @@ float p_bit::get_Ik1_float(int64_t NXY_Y,int64_t Y2)
     return Ik1*(1-fAi);
 }
 
-int8_t p_bit::get_inverse_sigmoid(uint16_t rand)
+int16_t p_bit::get_inverse_sigmoid(uint16_t rand)
 {
     //在最新的实现方式中，我们是采用了反函数的形式
     float nrand=(float)(rand%2048)
@@ -87,7 +87,7 @@ int8_t p_bit::get_inverse_sigmoid(uint16_t rand)
         inv=127;
     else if(inv<-128)
         inv=-128;
-    return (int8_t)inv;
+    return (int16_t)inv;
 }
 
 int p_bit::refresh_bit(int64_t NXY_Y, int64_t Y2,bool inverse=false)
@@ -101,7 +101,7 @@ int p_bit::refresh_bit(int64_t NXY_Y, int64_t Y2,bool inverse=false)
         int64_t Ik1=this->get_Ik1_int(NXY_Y, Y2);
         if(P_sigmoid_approx)
         {
-            int8_t rand_sig_inv=this->get_inverse_sigmoid(this_rand);
+            int16_t rand_sig_inv=this->get_inverse_sigmoid(this_rand);
             if(Ik1>rand_sig_inv)
             {
                 if(this->bit_now==0)
@@ -146,7 +146,7 @@ int p_bit::refresh_bit(int64_t NXY_Y, int64_t Y2,bool inverse=false)
 }
 
 
-uint64_t get_X(p_bit* ps,uint8_t n)
+uint64_t get_X(p_bit* ps,uint16_t n)
 {
     uint64_t x_now=1;
     for(uint32_t i=0;i<n-1;i++)

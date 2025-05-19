@@ -13,9 +13,9 @@ using namespace std;
 class p_bit
 {
 public:
-    uint8_t bit_now;//标记当前的pBit为1/0
-    uint8_t k;//标记这个pBit所在的位
-    uint8_t n;//系统总共有的位数（用来带入计算公式）
+    uint16_t bit_now;//标记当前的pBit为1/0
+    uint16_t k;//标记这个pBit所在的位
+    uint16_t n;//系统总共有的位数（用来带入计算公式）
     
     //A（指数）的表达式为A=(1-uAi)*Ene/tem
     
@@ -37,10 +37,10 @@ public:
     p_bit():bit_now(0),k(0),n(0),process_yuan(false){};
     
 private:
-    int8_t get_inverse_sigmoid(uint16_t rand);
+    int16_t get_inverse_sigmoid(uint16_t rand);
     int64_t get_Ik1_int(int64_t NXY_Y,int64_t Y2);//从计算出来的两个部分得到Ik1
     float get_Ik1_float(int64_t NXY_Y,int64_t Y2);//从计算出来的两个部分得到Ik1
 };
 
-uint64_t get_X(p_bit* p_bitsx,uint8_t n);//将pBit数组整合为一个数字
+uint64_t get_X(p_bit* p_bitsx,uint16_t n);//将pBit数组整合为一个数字
 

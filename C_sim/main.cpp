@@ -91,6 +91,7 @@ int main(int argc, const char * argv[]) {
     cout<<"TEST MESSAGE!!"<<endl;
     srand(static_cast<unsigned int>(time(0)));
     uint64_t steps=0;
+    double step_mean=0;
     ofstream file_out(P_output_file_name);
     char info_data[300];
     prepare_data_info(info_data);
@@ -103,7 +104,9 @@ int main(int argc, const char * argv[]) {
         steps=one_batch(P_test_num, true,i);
         file_out<<steps<<endl;
         cout<<"Iteration:"<<steps<<"\tFactor count:"<<i<<endl;
+        step_mean+=(double)steps/P_repeat_times;
     }
     file_out.close();
+    cout<<"Mean:"<<step_mean<<endl;
     return 0;
 }
