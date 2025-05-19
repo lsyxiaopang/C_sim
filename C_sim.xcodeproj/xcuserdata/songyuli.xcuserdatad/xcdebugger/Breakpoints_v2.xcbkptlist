@@ -14,8 +14,8 @@
             filePath = "C_sim/main.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
             landmarkName = "one_batch(N, process_yuan, c)"
             landmarkType = "9">
          </BreakpointContent>
@@ -46,25 +46,41 @@
             filePath = "C_sim/p_bit.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "29"
-            endingLineNumber = "29"
-            landmarkName = "p_bit::get_Ik1(NXY_Y, Y2)"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
+            landmarkName = "p_bit::get_Ik1_int(NXY_Y, Y2)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "AFA85E87-3FB5-4812-B324-35BEF1C7D066"
+            uuid = "28AC06F8-C19D-4E3B-8B6D-DB0C8FC1455E"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "C_sim/p_bit.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "53"
-            endingLineNumber = "53"
-            landmarkName = "p_bit::get_inverse_sigmoid(rand)"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "p_bit::get_Ik1_int(NXY_Y, Y2)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "CE26516A-3D07-458E-91D9-53D4D594BEFA"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "C_sim/p_bit.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "49"
+            endingLineNumber = "49"
+            landmarkName = "p_bit::get_Ik1_int(NXY_Y, Y2)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
