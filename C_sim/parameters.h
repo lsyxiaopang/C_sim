@@ -9,7 +9,7 @@
 
 #define STRINGIFY(x) #x
 #define MVTS(x) STRINGIFY(x)
-#define VERSION 0.1
+#define VERSION 0.2
 //该文件中定义各类运行中会用到的参数，以方便修改
 #define P_test_num 12337337
 #define P_output_file_name "S_12337337_no_qutify_SFA.txt"
@@ -28,13 +28,14 @@
 
 //这一部分数据需要保持与FPGA中一致
 //此处温度的含义是否与FPGA中一致我认为需要校准
-#define P_Ai_move1 4
+#define P_Ai_move1 4//局域温度的精度最高到24位，所以P_top_move不能改
 #define P_Ai_move2 5
 #define P_top_move1 14
 #define P_top_move2 15
 
 //控制系统的运行逻辑
-#define P_qutify_approx true
+#define P_qutify_approx false
+#define P_SFA true//控制是否开启SFA优化
 #define P_sigmoid_approx true
 #define P_approx_max 128//127:松弛截断 128:端到端截断（也可以用于实验更为松弛的截断方案）
 #define P_power_approx false

@@ -27,7 +27,10 @@ int64_t p_bit::get_Ik1_int(int64_t NXY_Y, int64_t Y2)
     }
     Ik1=(Ik1>>tem_m[0])+(Ik1>>tem_m[1])+(Ik1>>tem_m[2]);
     uint32_t addvalue=(1<<(24-P_Ai_move1))+(1<<(24-P_Ai_move2));
-    uAi=uAi-(uAi>>P_Ai_move1)-(uAi>>P_Ai_move2)+(addvalue-(addvalue>>P_top_move1)-(addvalue>>P_top_move2))*P_supress;
+    if(P_SFA)
+        uAi=uAi-(uAi>>P_Ai_move1)-(uAi>>P_Ai_move2)+(addvalue-(addvalue>>P_top_move1)-(addvalue>>P_top_move2))*P_supress;
+    else
+        uAi=0;//不开启SFA优化
     if(P_power_approx)
     {
         //使用指数近似
@@ -72,7 +75,10 @@ float p_bit::get_Ik1_float(int64_t NXY_Y,int64_t Y2)
         Ik1=s1-s2;
     }
     Ik1=Ik1/P_tem_float;
-    fAi=fAi*(1-P_Ai)+P_top*P_supress*P_Ai;
+    if(P_SFA)
+        fAi=fAi*(1-P_Ai)+P_top*P_supress*P_Ai;
+    else
+        fAi=0;
     return Ik1*(1-fAi);
 }
 
