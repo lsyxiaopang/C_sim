@@ -34,6 +34,13 @@
 #define P_top_move2 15
 
 //控制系统的运行逻辑
+//P_qutify_approx控制能量计算器系统是否有量化近似（不影响SFA开关与工作，但是实现不同）
+//P_SFA控制系统是否开启SFA优化（与是否有量化近似无关）
+//P_sigmoid_approx控制**在能量计算器系统开启近似**的前提下，sigmoid函数是否有量化近似（截断）
+//P_approx_max只有**在P_qutify_approx和P_sigmoid_approx**同时为true时才会生效
+//P_power_approx只有在**能量计算器系统开启近似**时才能使用（与P_sigmoid_approx是否开启无关），用以验证指数量化
+
+
 #define P_qutify_approx false
 #define P_SFA true//控制是否开启SFA优化
 #define P_sigmoid_approx true
