@@ -85,7 +85,7 @@ float p_bit::get_Ik1_float(int64_t NXY_Y,int64_t Y2)
 int16_t p_bit::get_inverse_sigmoid(uint16_t rand)
 {
     //在最新的实现方式中，我们是采用了反函数的形式
-    float nrand=(float)(rand%2048)
+    float nrand=(float)(rand%2049)
     ;//此处处理了一下边界防止溢出
     //此处不要修改！（与是否为松弛截断无关）
     float inv=log(2048/nrand-1)*16;//@@@@@注意：这里针对的也是乘了16的情况
