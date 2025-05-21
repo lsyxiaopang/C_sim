@@ -48,13 +48,13 @@ uint64_t one_batch(int64_t N,bool process_yuan,int c)
             int64_t N_XYY=(N-x0*y0)*y0;
             int64_t Y2=y0*y0;
 //            if((N%x)==0||(N%y)==0)
-            if(N_XYY==0)
+            if(N_XYY==0&&P_check_every_bit)
             {
                 ans=x0;
                 goto ready;
             }
             A[i].refresh_bit(N_XYY, Y2, true);
-       }
+        }
         for(int i=0;i<AB_len-1;i++)
         {
             int64_t y0=get_X(A, AB_len);
@@ -62,12 +62,19 @@ uint64_t one_batch(int64_t N,bool process_yuan,int c)
 
             int64_t N_XYY=(N-x0*y0)*y0;
             int64_t Y2=y0*y0;
-            if(N_XYY==0)
+            if(N_XYY==0&&P_check_every_bit)
             {
                 ans=x0;
                 goto ready;
             }
             B[i].refresh_bit(N_XYY,Y2,true);
+        }
+        int64_t check_x=get_X(A,AB_len);
+        int64_t check_y=get_X(B,AB_len);
+        if((N-check_x*check_y==0))
+        {
+            ans=check_x;
+            goto ready;
         }
         step++;
     }

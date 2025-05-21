@@ -46,9 +46,9 @@ int64_t p_bit::get_Ik1_int(int64_t NXY_Y, int64_t Y2)
     int16_t bak;
     if(P_sigmoid_approx)
     {
-        if(Ik1>127)
+        if(Ik1>P_approx_max)
             bak=(int16_t)P_approx_max;
-        else if (Ik1<-127)
+        else if (Ik1<-P_approx_max)
             bak=(int16_t)(-P_approx_max);
         else
             bak=(int16_t)Ik1;
