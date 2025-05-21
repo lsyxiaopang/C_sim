@@ -39,9 +39,9 @@ int64_t p_bit::get_Ik1_int(int64_t NXY_Y, int64_t Y2)
     }
     else
     {
-        //不使用指数近似（方便起见，使用作弊的float做法）
-        float fuAi=(float)((1<<24)-uAi)/(1<<24);
-        Ik1=(int64_t)((float)Ik1*fuAi);
+        //不使用指数近似（方便起见，使用作弊的double做法）
+        double fuAi=(double)((1<<24)-uAi)/(1<<24);
+        Ik1=(int64_t)((double)Ik1*fuAi);
     }
     int16_t bak;
     if(P_sigmoid_approx)
@@ -60,11 +60,11 @@ int64_t p_bit::get_Ik1_int(int64_t NXY_Y, int64_t Y2)
     }
 }
 
-float p_bit::get_Ik1_float(int64_t NXY_Y,int64_t Y2)
+double p_bit::get_Ik1_double(int64_t NXY_Y,int64_t Y2)
 {
-    float s1=(NXY_Y<<(this->k+1));
-    float s2=(Y2<<(2*(this->k)));
-    float Ik1;
+    double s1=(NXY_Y<<(this->k+1));
+    double s2=(Y2<<(2*(this->k)));
+    double Ik1;
     
     if(this->bit_now==1)
     {
@@ -74,7 +74,7 @@ float p_bit::get_Ik1_float(int64_t NXY_Y,int64_t Y2)
     {
         Ik1=s1-s2;
     }
-    Ik1=Ik1/P_tem_float;
+    Ik1=Ik1/P_tem_double;
     if(P_SFA)
         fAi=fAi*(1-P_Ai)+P_top*P_supress*P_Ai;
     else
@@ -85,10 +85,10 @@ float p_bit::get_Ik1_float(int64_t NXY_Y,int64_t Y2)
 int16_t p_bit::get_inverse_sigmoid(uint16_t rand)
 {
     //在最新的实现方式中，我们是采用了反函数的形式
-    float nrand=(float)(rand%2049)
+    double nrand=(double)(rand%2049)
     ;//此处处理了一下边界防止溢出
     //此处不要修改！（与是否为松弛截断无关）
-    float inv=log(2048/nrand-1)*16;//@@@@@注意：这里针对的也是乘了16的情况
+    double inv=log(2048/nrand-1)*16;//@@@@@注意：这里针对的也是乘了16的情况
     if(inv>127)
         inv=127;
     else if(inv<-128)
@@ -101,7 +101,7 @@ int p_bit::refresh_bit(int64_t NXY_Y, int64_t Y2,bool inverse=false)
     int bak_s=1;
     //完成对p-bit的一次更新
     uint16_t this_rand=rand()%65535;
-    float sigmoid_input;
+    double sigmoid_input;
     if(P_qutify_approx)
     {
         int64_t Ik1=this->get_Ik1_int(NXY_Y, Y2);
@@ -128,13 +128,13 @@ int p_bit::refresh_bit(int64_t NXY_Y, int64_t Y2,bool inverse=false)
     }
     else
     {
-        sigmoid_input=this->get_Ik1_float(NXY_Y, Y2);
+        sigmoid_input=this->get_Ik1_double(NXY_Y, Y2);
     }
     if((P_qutify_approx==false)||(P_sigmoid_approx==false))
     {
         //使用传统的sigmoid（浮点法）进行计算
-        float sigmoid_out=1/(1+exp(-sigmoid_input));//需要检查是否正确
-        float rand_01=(float)this_rand/65535;
+        double sigmoid_out=1/(1+exp(-sigmoid_input));//需要检查是否正确
+        double rand_01=(double)this_rand/65535;
         if(sigmoid_out>rand_01)
         {
             if(this->bit_now==0)

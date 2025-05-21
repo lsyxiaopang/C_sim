@@ -87,7 +87,7 @@ void prepare_data_info(char* info_str)
     sprintf(info_str,"###VERSION%s INFO\n###%s %s %s ||%s %s %s %s|%s %s %s %s %s %s\n###P_qutify_approx  %s\n###P_SFA %s\n###sigmoid_approx %s\n###approx_max %s\n###power_approx %s",
             MVTS(VERSION),
             MVTS(P_test_num),MVTS(P_repeat_times),MVTS(AB_len),
-            MVTS(P_tem_float),MVTS(P_tem_int1),MVTS(P_tem_int2),MVTS(P_tem_int3),
+            MVTS(P_tem_double),MVTS(P_tem_int1),MVTS(P_tem_int2),MVTS(P_tem_int3),
             MVTS(P_Ai),MVTS(P_top),MVTS(P_Ai_move1),MVTS(P_Ai_move2),MVTS(P_top_move1),MVTS(P_top_move2),
             MVTS(P_qutify_approx),MVTS(P_SFA),MVTS(P_sigmoid_approx),MVTS(P_approx_max),MVTS(P_power_approx));
     return;

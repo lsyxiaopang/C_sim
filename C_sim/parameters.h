@@ -10,22 +10,22 @@
 
 #define STRINGIFY(x) #x
 #define MVTS(x) STRINGIFY(x)
-#define VERSION 0.4
+#define VERSION 0.5
 //该文件中定义各类运行中会用到的参数，以方便修改
-#define P_test_num 161766769
+#define P_test_num 497718901
 #define P_output_file_name "S_12337337_no_qutify_SFA.txt"
 #define P_repeat_times 100
-#define AB_len 14//两个分解出来的位数
+#define AB_len 15//两个分解出来的位数
 
 #define P_tem_int1 47//如果sigmoid_approx被使能了，那么这里的值需要被减4
 #define P_tem_int2 47
 #define P_tem_int3 48
-#define P_tem_float (1e15)//需要研究这两个参数之间是如何转化的
+#define P_tem_double (1e13)//需要研究这两个参数之间是如何转化的
 
-#define P_Ai 0.1//局域温度参数(1-Ai)*u+top*Ai*bit_now
-#define P_top 0.9999//这个结果似乎不能高于1-1e-7的结果
+#define P_Ai 0.01//局域温度参数(1-Ai)*u+top*Ai*bit_now
+#define P_top 1//这个结果似乎不能高于1-1e-7的结果
 
-#define P_supress (1-this->bit_now) //this->bit_now or 1-this->bit_now
+#define P_supress (this->bit_now) //this->bit_now or 1-this->bit_now
 
 //这一部分数据需要保持与FPGA中一致
 //此处温度的含义是否与FPGA中一致我认为需要校准
@@ -43,8 +43,8 @@
 //P_power_approx只有在**能量计算器系统开启近似**时才能使用（与P_sigmoid_approx是否开启无关），用以验证指数量化
 
 #define P_check_every_bit true
-#define P_qutify_approx true
-#define P_SFA false//控制是否开启SFA优化
+#define P_qutify_approx false
+#define P_SFA true//控制是否开启SFA优化
 #define P_sigmoid_approx true
 #define P_approx_max 128//127:松弛截断 128:端到端截断（也可以用于实验更为松弛的截断方案）(不要改成128）
 #define P_power_approx false
