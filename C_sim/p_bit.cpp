@@ -5,7 +5,7 @@
 //  Created by songyu li on 2025/1/1.
 //
 #include "p_bit.h"
-#include "parameters.h"
+//#include "parameters.h"
 
 
 int64_t p_bit::get_Ik1_int(int64_t NXY_Y, int64_t Y2)
@@ -25,13 +25,20 @@ int64_t p_bit::get_Ik1_int(int64_t NXY_Y, int64_t Y2)
     {
         Ik1=s1-s2;
     }
-    Ik1=(Ik1>>tem_m[0])+(Ik1>>tem_m[1])+(Ik1>>tem_m[2]);
-    uint32_t addvalue=(1<<(24-P_Ai_move1))+(1<<(24-P_Ai_move2));
-    if(P_SFA)
-        uAi=uAi-(uAi>>P_Ai_move1)-(uAi>>P_Ai_move2)+(addvalue-(addvalue>>P_top_move1)-(addvalue>>P_top_move2))*P_supress;
+    Ik1=(Ik1>>(this_info.iback_temp[0]-4))+(Ik1>>(this_info.iback_temp[1]-4))+(Ik1>>(this_info.iback_temp[2]-4));
+    if(this_info.sigmoid_approx==false)
+        Ik1=Ik1>>4;
+    uint32_t addvalue=(1<<(24-this_info.iAi[0]))+(1<<(24-this_info.iAi[1]));
+    int p_supress;
+    if(this_info.supress_type==0)
+        p_supress=1-this->bit_now;
+    else
+        p_supress=this->bit_now;
+    if(this_info.sfa)
+        uAi=uAi-(uAi>>this_info.iAi[0])-(uAi>>this_info.iAi[1])+(addvalue-(addvalue>>this_info.iregion_top[0])-(addvalue>>this_info.iregion_top[0]))*p_supress;
     else
         uAi=0;//不开启SFA优化
-    if(P_power_approx)
+    if(this_info.power_approx)
     {
         //使用指数近似
         Ik1=Ik1<<((int)log2((1<<24)-uAi));
@@ -44,12 +51,12 @@ int64_t p_bit::get_Ik1_int(int64_t NXY_Y, int64_t Y2)
         Ik1=(int64_t)((double)Ik1*fuAi);
     }
     int16_t bak;
-    if(P_sigmoid_approx)
+    if(this_info.sigmoid_approx)
     {
-        if(Ik1>P_approx_max)
-            bak=(int16_t)P_approx_max;
-        else if (Ik1<-P_approx_max)
-            bak=(int16_t)(-P_approx_max);
+        if(Ik1>this_info.approx_max)
+            bak=(int16_t)this_info.approx_max;
+        else if (Ik1<-this_info.approx_max)
+            bak=(int16_t)(-this_info.approx_max);
         else
             bak=(int16_t)Ik1;
         return bak;
@@ -65,7 +72,11 @@ double p_bit::get_Ik1_double(int64_t NXY_Y,int64_t Y2)
     double s1=(NXY_Y<<(this->k+1));
     double s2=(Y2<<(2*(this->k)));
     double Ik1;
-    
+    int p_supress;
+    if(this_info.supress_type==0)
+        p_supress=1-this->bit_now;
+    else
+        p_supress=this->bit_now;
     if(this->bit_now==1)
     {
         Ik1=s1+s2;
@@ -74,12 +85,12 @@ double p_bit::get_Ik1_double(int64_t NXY_Y,int64_t Y2)
     {
         Ik1=s1-s2;
     }
-    Ik1=Ik1/P_tem_double;
-    if(P_SFA)
-        fAi=fAi*(1-P_Ai)+P_top*P_supress*P_Ai;
+    Ik1=Ik1/this_info.fback_temp;
+    if(this_info.sfa)
+        dAi=dAi*(1-this_info.fAi)+this_info.fregion_top*p_supress*this_info.fAi;
     else
-        fAi=0;
-    return Ik1*(1-fAi);
+        dAi=0;
+    return Ik1*(1-dAi);
 }
 
 int16_t p_bit::get_inverse_sigmoid(uint16_t rand)
@@ -101,11 +112,11 @@ int p_bit::refresh_bit(int64_t NXY_Y, int64_t Y2,bool inverse=false)
     int bak_s=1;
     //完成对p-bit的一次更新
     uint16_t this_rand=rand()%65535;
-    double sigmoid_input;
-    if(P_qutify_approx)
+    double sigmoid_input=1e10;
+    if(this_info.quitfy)
     {
         int64_t Ik1=this->get_Ik1_int(NXY_Y, Y2);
-        if(P_sigmoid_approx)
+        if(this_info.sigmoid_approx)
         {
             int16_t rand_sig_inv=this->get_inverse_sigmoid(this_rand);
             if(Ik1>rand_sig_inv)
@@ -130,9 +141,11 @@ int p_bit::refresh_bit(int64_t NXY_Y, int64_t Y2,bool inverse=false)
     {
         sigmoid_input=this->get_Ik1_double(NXY_Y, Y2);
     }
-    if((P_qutify_approx==false)||(P_sigmoid_approx==false))
+    if((this_info.quitfy==false)||(this_info.sigmoid_approx==false))
     {
         //使用传统的sigmoid（浮点法）进行计算
+        if(abs(sigmoid_input-1e10)<0.001)
+            cout<<"WARNING p_bit ERROR!!!"<<endl;
         double sigmoid_out=1/(1+exp(-sigmoid_input));//需要检查是否正确
         double rand_01=(double)this_rand/65535;
         if(sigmoid_out>rand_01)

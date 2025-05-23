@@ -11,109 +11,177 @@
 #include <cstdlib>
 #include "p_bit.h"
 #include <chrono>//这个代码用于计时
-#include "parameters.h"
+//#include "parameters.h"
+#include "read_paras.h"
+#include <time.h>
+#include <sys/stat.h>
+#define MAX_AB_LEN 16
+#define MAX_REPEAT 10000
 
 using namespace std;
 
-//uint64_t seed_values[28]={
-//    20,21,22,23,24,25,26,27,28,29,30,31,32,33,
-//    40,41,42,43,44,45,46,47,48,49,50,51,52,53
-//    
-//};
-
-int64_t update_NXYY(int64_t N_XYY_o,int64_t Y2,int k,int s)
+p_bit_infos prepare_one_num(string* value,stringstream lss)
 {
-    int64_t y2k=(Y2<<k);
-    return N_XYY_o-(1-s)*y2k;
-}
-
-uint64_t one_batch(int64_t N,bool process_yuan,int c)
-{
-    p_bit A[AB_len-1];
-    for(int i=0;i<AB_len-1;i++)
-        A[i]=p_bit(i+1, AB_len*2,process_yuan);//注意修改温度
-    p_bit B[AB_len-1];
-    for(int i=0;i<AB_len-1;i++)
-        B[i]=p_bit(i+1, AB_len*2,process_yuan);
-
-    uint64_t ans=0;
-    uint64_t step=0;
-    while (true) {
-//        分为三步：1.检查 2.更新A 3.更新B
-        for(int i=0;i<AB_len-1;i++)
-        {
-            int64_t x0=get_X(A, AB_len);
-            int64_t y0=get_X(B,AB_len);
-
-            int64_t N_XYY=(N-x0*y0)*y0;
-            int64_t Y2=y0*y0;
-//            if((N%x)==0||(N%y)==0)
-            if(N_XYY==0&&P_check_every_bit)
-            {
-                ans=x0;
-                goto ready;
-            }
-            A[i].refresh_bit(N_XYY, Y2, true);
-        }
-        for(int i=0;i<AB_len-1;i++)
-        {
-            int64_t y0=get_X(A, AB_len);
-            int64_t x0=get_X(B,AB_len);
-
-            int64_t N_XYY=(N-x0*y0)*y0;
-            int64_t Y2=y0*y0;
-            if(N_XYY==0&&P_check_every_bit)
-            {
-                ans=x0;
-                goto ready;
-            }
-            B[i].refresh_bit(N_XYY,Y2,true);
-        }
-        int64_t check_x=get_X(A,AB_len);
-        int64_t check_y=get_X(B,AB_len);
-        if((N-check_x*check_y==0))
-        {
-            ans=check_x;
-            goto ready;
-        }
-        step++;
+    p_bit_infos ret;
+    ret.version=value[0];
+    ret.supress_type=stoi(value[4]);
+    ret.check_every_bit=(bool)stoi(value[5]);
+    ret.quitfy=(bool)stoi(value[6]);
+    ret.sfa=(bool)stoi(value[7]);
+    ret.sigmoid_approx=(bool)stoi(value[8]);
+    ret.power_approx=(bool)stoi(value[10]);
+    if(ret.quitfy==false&&ret.sigmoid_approx==true)
+    {
+        cout<<"WARNING, quitfy is not open, sigmoid_cut won't work!"<<endl;
     }
-ready:  cout<<"Get answer:"<<ans<<endl;
-    return step;
+    ret.approx_max=stoi(value[9]);
+    
+    string back_data;
+    getline(lss,back_data,',');
+    ret.test_num=stoi(back_data);
+    ret.output_length=(int)(((int)log2(ret.test_num)+2)/2);
+    getline(lss,back_data,',');
+    ret.fback_temp=stod(back_data);
+    for(int i=0;i<3;i++)
+    {
+        getline(lss,back_data,',');
+        ret.iback_temp[i]=stoi(back_data);
+    }
+    getline(lss,back_data,',');
+    ret.fAi=stod(back_data);
+    for(int i=0;i<2;i++)
+    {
+        getline(lss,back_data,',');
+        ret.iAi[i]=stoi(back_data);
+    }
+    getline(lss,back_data,',');
+    ret.fregion_top=stod(back_data);
+    for(int i=0;i<2;i++)
+    {
+        getline(lss,back_data,',');
+        ret.iregion_top[i]=stoi(back_data);
+    }
+    return ret;
+};
+
+
+float one_num(int repeat,int64_t* output_data,p_bit_infos info)
+{
+    float back=0;
+    for(int i=0;i<repeat;i++)
+    {
+        //First initial all the p-bits
+        p_bit A[MAX_AB_LEN-1];
+        p_bit B[MAX_AB_LEN-1];
+        for (int i=0;i<MAX_AB_LEN-1;i++)
+        {
+            A[i]=p_bit(i+1,info.output_length*2,info);
+            B[i]=p_bit(i+1,info.output_length*2,info);
+        }
+        uint64_t ans_now=0;
+        uint64_t step=0;
+        while(true){
+            for(int i=0;i<info.output_length-1;i++)
+            {
+                int64_t x0=get_X(A,info.output_length);
+                int64_t y0=get_X(B,info.output_length);
+                
+                int64_t N_XYY=(info.test_num-x0*y0)*y0;
+                int64_t Y2=y0*y0;
+                if(N_XYY==0&&info.check_every_bit)
+                {
+                    ans_now=x0;
+                    goto ready;
+                }
+                A[i].refresh_bit(N_XYY, Y2, true);
+            }
+            for(int i=0;i<info.output_length-1;i++)
+            {
+                int64_t y0=get_X(A,info.output_length);
+                int64_t x0=get_X(B,info.output_length);
+                
+                int64_t N_XYY=(info.test_num-x0*y0)*y0;
+                int64_t Y2=y0*y0;
+                if(N_XYY==0&&info.check_every_bit)
+                {
+                    ans_now=x0;
+                    goto ready;
+                }
+                B[i].refresh_bit(N_XYY,Y2,true);
+            }
+            int64_t check_x=get_X(A,info.output_length);
+            int64_t check_y=get_X(B,info.output_length);
+            if((info.test_num-check_x*check_y==0))
+            {
+                ans_now=check_x;
+                goto ready;
+            }
+            step++;
+        }
+        ready:cout<<"Get answer:"<<ans_now<<endl;
+        back+=(float)step/(float)repeat;
+        output_data[i]=step;
+    }
+    return back;
 }
 
-void prepare_data_info(char* info_str)
-{
-    sprintf(info_str,"###VERSION%s INFO\n###%s %s %s ||%s %s %s %s|%s %s %s %s %s %s\n###P_qutify_approx  %s\n###P_SFA %s\n###sigmoid_approx %s\n###approx_max %s\n###power_approx %s",
-            MVTS(VERSION),
-            MVTS(P_test_num),MVTS(P_repeat_times),MVTS(AB_len),
-            MVTS(P_tem_double),MVTS(P_tem_int1),MVTS(P_tem_int2),MVTS(P_tem_int3),
-            MVTS(P_Ai),MVTS(P_top),MVTS(P_Ai_move1),MVTS(P_Ai_move2),MVTS(P_top_move1),MVTS(P_top_move2),
-            MVTS(P_qutify_approx),MVTS(P_SFA),MVTS(P_sigmoid_approx),MVTS(P_approx_max),MVTS(P_power_approx));
-    return;
-}
 
 int main(int argc, const char * argv[]) {
-    cout<<"RAND max:"<<RAND_MAX<<endl;
-    cout<<"TEST MESSAGE!!"<<endl;
-    srand(static_cast<unsigned int>(time(0)));
-    uint64_t steps=0;
-    double step_mean=0;
-    ofstream file_out(P_output_file_name);
-    char info_data[300];
-    prepare_data_info(info_data);
-    file_out<<info_data<<endl;
-    
-    if (!file_out)
-        return 1;
-    for(int i=0;i<P_repeat_times;i++)
-    {
-        steps=one_batch(P_test_num, true,i);
-        file_out<<steps<<endl;
-        cout<<"Iteration:"<<steps<<"\tFactor count:"<<i<<endl;
-        step_mean+=(double)steps/P_repeat_times;
+    string profile_name[12];
+    string profile_val[12];
+    string input_profile_name="/Users/songyuli/Library/CloudStorage/OneDrive-Personal/OtherProj/pB/C_sim/C_sim/C_sim/paras.csv";
+    read_config(input_profile_name,profile_name,profile_val);
+    //prepare output folder
+    time_t raw_time;
+    struct tm *time_info;
+    char time_str[40];
+    time(&raw_time);
+    time_info=localtime(&raw_time);
+    strftime(time_str, sizeof(time_str), "%Y%m%d%H-%M-%S", time_info);
+    string output_folder_name;
+    output_folder_name=profile_val[2]+string(time_str);
+    mkdir(output_folder_name.c_str(),0777);
+    copy_config(input_profile_name, output_folder_name);
+    string output_data_name=output_folder_name+"/data.csv";
+    //input file
+    ifstream data_input_file(profile_val[1]);
+    ofstream data_output_file(output_data_name);
+    string line;
+    int repeat_times=stoi(profile_val[3]);
+    while (getline(data_input_file,line)) {
+        if(line.empty()||line[0]=='#')
+            continue;
+        else
+        {
+            p_bit_infos info;
+            info=prepare_one_num(profile_val, stringstream(line));
+            int64_t back_count[MAX_REPEAT];
+            float mean=one_num(repeat_times, back_count, info);
+            data_output_file<<info.test_num<<","<<repeat_times<<",-,";
+            if(info.quitfy==true)
+            {
+                //Only output quitfy info
+                data_output_file<<info.iback_temp[0]<<","<<
+                info.iback_temp[1]<<","<<info.iback_temp[2]<<",-,";
+                if(info.sfa)
+                    data_output_file<<info.iAi[0]<<","<<info.iAi[1]<<","<<info.iregion_top[0]<<","<<info.iregion_top[1]<<",-,";
+            }
+            else
+            {
+                //Only output float info
+                data_output_file<<info.fback_temp<<",-,";
+                if(info.sfa)
+                    data_output_file<<info.fAi<<","<<info.fregion_top<<",-,";
+            }
+            //Output mean and other stuff
+            data_output_file<<mean;
+            for(int i=0;i<repeat_times;i++)
+                data_output_file<<","<<back_count[i];
+            data_output_file<<endl;
+            cout<<"One line complete!"<<mean<<endl;
+
+        }
     }
-    file_out.close();
-    cout<<"Mean:"<<step_mean<<endl;
+    data_input_file.close();
     return 0;
 }
