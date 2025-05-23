@@ -1,14 +1,21 @@
 #This is a comment
 #DO NOT change the order of the settings
 #Leave this file unchanged
-version,1.1
+version,1.2
 input_data_file,/Users/songyuli/Library/CloudStorage/OneDrive-Personal/OtherProj/pB/C_sim/C_sim/C_sim/test_data.csv
 output_folder_prefix,/Users/songyuli/Library/CloudStorage/OneDrive-Personal/OtherProj/pB/C_sim/C_sim/C_sim/x
-repeat_times,1000
-supress_type,0
+repeat_times,100
+supress_type,1
 check_every_bit,1
 quitfy_approx,1
 SFA_open,1
-sigmoid_cut,0
-sigmoid_max,128
+sigmoid_cut,1
+sigmoid_max,127
 power_approx,0
+itemp_back1,44
+itemp_back2,44
+itemp_back3,44
+iAi1,7
+iAi2,8
+iregion_top1,24
+iregion_top2,24

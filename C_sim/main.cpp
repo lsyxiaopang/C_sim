@@ -40,27 +40,27 @@ p_bit_infos prepare_one_num(string* value,stringstream lss)
     getline(lss,back_data,',');
     ret.test_num=stoi(back_data);
     ret.output_length=(int)(((int)log2(ret.test_num)+2)/2);
-    getline(lss,back_data,',');
-    ret.fback_temp=stod(back_data);
+    double ft=0;
     for(int i=0;i<3;i++)
     {
-        getline(lss,back_data,',');
-        ret.iback_temp[i]=stoi(back_data);
+        ret.iback_temp[i]=stoi(value[11+i]);
+        ft+=((int64_t)1<<ret.iback_temp[i]);
     }
-    getline(lss,back_data,',');
-    ret.fAi=stod(back_data);
+    ret.fback_temp=ft;
+    int n=0;
     for(int i=0;i<2;i++)
     {
-        getline(lss,back_data,',');
-        ret.iAi[i]=stoi(back_data);
+        ret.iAi[i]=stoi(value[14+i]);
+        n+=(1<<(24-ret.iAi[i]));
     }
-    getline(lss,back_data,',');
-    ret.fregion_top=stod(back_data);
+    ret.fAi=float(n)/float(1<<24);
+    n=0;
     for(int i=0;i<2;i++)
     {
-        getline(lss,back_data,',');
-        ret.iregion_top[i]=stoi(back_data);
+        ret.iregion_top[i]=stoi(value[16+i]);
+        n+=(1<<(24-ret.iregion_top[i]));
     }
+    ret.fregion_top=1-float(n)/float(1<<24);
     return ret;
 };
 
@@ -127,8 +127,8 @@ float one_num(int repeat,int64_t* output_data,p_bit_infos info)
 
 
 int main(int argc, const char * argv[]) {
-    string profile_name[12];
-    string profile_val[12];
+    string profile_name[20];
+    string profile_val[20];
     string input_profile_name="/Users/songyuli/Library/CloudStorage/OneDrive-Personal/OtherProj/pB/C_sim/C_sim/C_sim/paras.csv";
     read_config(input_profile_name,profile_name,profile_val);
     //prepare output folder
@@ -175,8 +175,8 @@ int main(int argc, const char * argv[]) {
             }
             //Output mean and other stuff
             data_output_file<<mean;
-            for(int i=0;i<repeat_times;i++)
-                data_output_file<<","<<back_count[i];
+//            for(int i=0;i<repeat_times;i++)
+//                data_output_file<<","<<back_count[i];
             data_output_file<<endl;
             cout<<"One line complete!"<<mean<<endl;
 
