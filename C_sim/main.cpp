@@ -44,9 +44,9 @@ p_bit_infos prepare_one_num(string* value,stringstream lss)
     for(int i=0;i<3;i++)
     {
         ret.iback_temp[i]=stoi(value[11+i]);
-        ft+=((int64_t)1<<ret.iback_temp[i]);
+        ft+=1/((double)((uint64_t)1<<ret.iback_temp[i]));
     }
-    ret.fback_temp=ft;
+    ret.fback_temp=1/ft;
     int n=0;
     for(int i=0;i<2;i++)
     {
