@@ -5,7 +5,7 @@
 //  Created by songyu li on 2025/1/1.
 //
 
-
+#define VERSION 1.4
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
@@ -118,7 +118,7 @@ float one_num(int repeat,int64_t* output_data,p_bit_infos info)
             }
             step++;
         }
-        ready:cout<<"Get answer:"<<ans_now<<endl;
+        ready:cout<<"Get answer:"<<ans_now<<"\t Iteration:"<<step<<endl;
         back+=(float)step/(float)repeat;
         output_data[i]=step;
     }
@@ -129,7 +129,7 @@ float one_num(int repeat,int64_t* output_data,p_bit_infos info)
 int main(int argc, const char * argv[]) {
     string profile_name[20];
     string profile_val[20];
-    string input_profile_name="/Users/songyuli/Library/CloudStorage/OneDrive-Personal/OtherProj/pB/C_sim/C_sim/C_sim/paras.csv";
+    string input_profile_name="C_sim/paras.csv";
     read_config(input_profile_name,profile_name,profile_val);
     //prepare output folder
     time_t raw_time;
