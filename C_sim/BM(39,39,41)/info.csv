@@ -12,9 +12,9 @@ SFA_open,0
 sigmoid_cut,1
 sigmoid_max,127
 power_approx,0
-itemp_back1,35
-itemp_back2,35
-itemp_back3,37
+itemp_back1,39
+itemp_back2,39
+itemp_back3,41
 iAi1,4
 iAi2,5
 iregion_top1,14

@@ -8,13 +8,13 @@ repeat_times,50
 supress_type,1
 check_every_bit,0
 quitfy_approx,1
-SFA_open,0
+SFA_open,1
 sigmoid_cut,1
 sigmoid_max,127
 power_approx,0
-itemp_back1,35
-itemp_back2,35
-itemp_back3,37
+itemp_back1,21
+itemp_back2,21
+itemp_back3,23
 iAi1,4
 iAi2,5
 iregion_top1,14
