@@ -44,10 +44,16 @@ def repeat_factor(ser:serial.Serial,input_data,groups):
         # print("Waiting for the factorization process to finish")
         for i in range(G_len):
             bdata=ser.read(18)
-            back_val.append(((bdata[3]<<24)+(bdata[2]<<16)+(bdata[1]<<8)+bdata[0]))#*No need to *2+1 to get the final value
+            v=(((bdata[3]<<24)+(bdata[2]<<16)+(bdata[1]<<8)+bdata[0]))#*No need to *2+1 to get the final value
             # back_val.append(bdata[1]*256+bdata[0])#*No need to *2+1 to get the final value
-            back_count.append((bdata[9]<<40)+(bdata[8]<<32)+
+            c=((bdata[9]<<40)+(bdata[8]<<32)+
                 (bdata[7]<<24)+(bdata[6]<<16)+(bdata[5]<<8)+(bdata[4]))
+            if(v!=0):
+                back_val.append(v)
+                back_count.append(c)
+            else:
+                back_val.append(1)
+                back_count.append(np.nan)
             # back_count.append((bdata[5]<<24)+(bdata[4]<<16)+(bdata[3]<<8)+(bdata[2]))
         print(F"Group {j} finished! Count result:{back_count[-1]}")
     #*Only the last config in the group would be saved
@@ -91,7 +97,7 @@ if __name__=="__main__":
     ser=init_sys(serial_number)
 
     #*Reconfigure the system
-    set_value(ser,value_table[0],value_table[1],value_table[2],[31])
+    set_value(ser,value_table[0],value_table[1],value_table[2],[16])
     #! 在这里标记用到了多少个pBit(例如分解30位数需要14个pBit)
     set_pbit_num(ser,14) 
     # set_pbit_num(ser,11) #!保留这一行（注释）用于系统快速验证

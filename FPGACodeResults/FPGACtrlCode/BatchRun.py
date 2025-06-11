@@ -1,8 +1,8 @@
-VERSION="0.0"
+VERSION="0.1"
 import tomllib
 from loguru import logger
 
-toml_name="FPGACodeResults/FPGACtrlCode/testinfo.toml"
+toml_name="FPGACodeResults/Running/Test/611/testinfo.toml"
 toml_file=open(toml_name,"rb")
 config_data=tomllib.load(toml_file)
 #*读取基本数据
@@ -15,6 +15,7 @@ output_base=config_data["output_folder"]
 fpga_serial=config_data["fpga_control"]
 
 #TODO 在目标文件夹创建对应日志文件
+logger.add(output_base+"info_log.log")
 logger.info("Read config finished!")
 
 #*系统连接FPGA
@@ -46,7 +47,7 @@ for sec_name,sec_data in sections:
         logger.info(F"{data} factorization finished with settings {conf}")
         if not all(data%v==0 for v in val):
             logger.error(F"Output value {val} have problem!!!")
-        results.append(F"{data},{np.mean(count)},{np.std(count)},{",".join(map(str,count))}")
+        results.append(F"{data},{np.mean(count)},{np.std(count)},{','.join(map(str,count))}")
     
     outputfile=open(output_base+sec_data["output_csv"],"w")
     outputfile.write("\n".join(results))
@@ -54,6 +55,6 @@ for sec_name,sec_data in sections:
     logger.info(F"Section {sec_name} finished")
 
     fmc.stop_factorize(ser)
-    fmc.stop_factorize(ser)
+    # fmc.stop_factorize(ser)
     
     
