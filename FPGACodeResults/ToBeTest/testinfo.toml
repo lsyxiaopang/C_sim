@@ -1,0 +1,27 @@
+# 这是一个示例用的配置文件
+# section的顺序决定执行顺序，section内部顺序无区别
+version="0.0"
+fpga_control="/dev/tty_back_up"
+input_folder="FPGACodeResults/Running/Test/"
+output_folder="FPGACodeResults/Running/Test/"
+
+[test_small]
+input_csv="Test_small.csv"#设置输入文件csv
+back_temp=[21,21,23]#设置背景温度
+region_temp_coeff=[4,5]#设置局域温度参数
+region_temp_top=[14,15]#设置局域温度最大
+pbit_count=10#设置分解这些数的时候单组用到了多少p-bit
+max_iter_pow=30#设置最大迭代次数指数（注意时间）
+output_csv="Test_small_out.csv"
+repeat=10
+
+# [test_large]
+# input_csv="Test_large.csv"#设置输入文件csv
+# back_temp=[37,37,39]#设置背景温度
+# region_temp_coeff=[7,8]#设置局域温度参数
+# region_temp_top=[14,15]#设置局域温度最大
+# pbit_count=14#设置分解这些数的时候单组用到了多少p-bit
+# max_iter_pow=30#设置最大迭代次数指数（注意时间）
+# repeat=10
+# output_csv="Test_large_out.csv"
+
