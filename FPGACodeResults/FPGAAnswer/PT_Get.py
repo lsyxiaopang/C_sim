@@ -1,12 +1,12 @@
 import numpy as np
-data_file_name="BM_Output_30.csv"
+data_file_name="4-5_11-12_58_44.csv"
 
 array=np.loadtxt(data_file_name,delimiter=",")
 print(array.shape)
 count_data=array[:,3:].reshape(-1)
 prob_arr=np.linspace(0,1,count_data.shape[0])
 ans=np.dstack([prob_arr,np.sort(count_data)])[0,:,:]
-print(ans[:,0])
+print(ans[:,1])
 np.savetxt("prob_"+data_file_name,ans,delimiter=",")
 
 err07=np.abs(ans[:,0]-0.7)
