@@ -1,5 +1,6 @@
 VERSION="0.1"
 import tomllib
+import time
 from loguru import logger
 
 toml_name="FPGACodeResults/Running/Test/611/testinfo.toml"
@@ -39,22 +40,25 @@ for sec_name,sec_data in sections:
     fmc.start_factorize(ser)
     #*开始读取数据
     datas=np.loadtxt(input_base+sec_data["input_csv"],dtype=np.uint64).reshape(-1)
+    outputfile=open(output_base+sec_data["output_csv"],"a")
     logger.info(F"Read {datas.shape[0]} data")
     repeat_times=sec_data["repeat"]
-    results=[]
+    # results=[]
     for data in datas:
         val,count,conf=fmc.repeat_factor(ser,data,repeat_times)
         logger.info(F"{data} factorization finished with settings {conf}")
         if not all(data%v==0 for v in val):
             logger.error(F"Output value {val} have problem!!!")
-        results.append(F"{data},{np.mean(count)},{np.std(count)},{','.join(map(str,count))}")
+        outputfile.write(F"{data},{np.mean(count)},{np.std(count)},{','.join(map(str,count))}\n")
     
-    outputfile=open(output_base+sec_data["output_csv"],"w")
-    outputfile.write("\n".join(results))
+    # outputfile.write("\n".join(results))
     outputfile.close()
     logger.info(F"Section {sec_name} finished")
 
     fmc.stop_factorize(ser)
-    # fmc.stop_factorize(ser)
+    fmc.stop_factorize(ser)
+    time.sleep(0.1)
+    ser.flushInput()
+    ser.flushOutput()
     
     
