@@ -1,6 +1,7 @@
 import numpy as np
 import serial
 import time
+from loguru import logger
 
 G_len=1
 
@@ -36,6 +37,9 @@ def repeat_factor(ser:serial.Serial,input_data,groups):
     back_val=[]
     back_count=[]
     info_dict={"back temp":[],"region increase":[],"region max":[],"pbit len":[]}
+    ######################
+    logger.debug(F"Repeat factor {input_data}!")
+    ######################
     for i in range(8):#8*8=64
         cut_data.append((input_data>>(i*8))&0xFF)
     for j in range(groups):
