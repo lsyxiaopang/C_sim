@@ -1,21 +1,25 @@
 #This is a comment
 #DO NOT change the order of the settings
 #Leave this file unchanged
-version,1.4
+#Note: to deal with annealing only
+version,2.0
 input_data_file,C_sim/test_data.csv
 output_folder_prefix,C_sim/x
-repeat_times,100
+repeat_times,10000
 supress_type,0
 check_every_bit,0
-quitfy_approx,1
-SFA_open,1
+quitfy_approx,0
+SFA_open,0
 sigmoid_cut,1
 sigmoid_max,127
 power_approx,0
-itemp_back1,37
-itemp_back2,37
-itemp_back3,39
+itemp_back1,41
+itemp_back2,41
+itemp_back3,44
 iAi1,7
 iAi2,8
 iregion_top1,14
 iregion_top2,15
+ftemp_start,1e5
+ftemp_end,1e2
+nsteps,10

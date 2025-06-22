@@ -21,6 +21,10 @@ struct p_bit_infos//这一信息应该和未来FPGA设定的信息相互对应
     double fAi;
     double fregion_top;
     
+    double fanneal_temp_start;
+    double fanneal_temp_end;
+    int anneal_steps;
+    
     int iback_temp[3];
     int iAi[2];
     int iregion_top[2];
@@ -57,7 +61,7 @@ public:
     double dAi=0;
     bool process_yuan;//判断是否用局域温度的方法来计算Ik
     
-    int refresh_bit(int64_t NXY_Y,int64_t Y2,bool inverse);//从已有的数据更新这个pbit的数据 并且返回更新信息
+    int refresh_bit(int64_t NXY_Y,int64_t Y2,bool use_anneal,double I,bool inverse);//从已有的数据更新这个pbit的数据 并且返回更新信息
     
     uint32_t lfsr_generate();
     

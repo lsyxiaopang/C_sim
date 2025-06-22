@@ -107,7 +107,7 @@ int16_t p_bit::get_inverse_sigmoid(uint16_t rand)
     return (int16_t)inv;
 }
 
-int p_bit::refresh_bit(int64_t NXY_Y, int64_t Y2,bool inverse=false)
+int p_bit::refresh_bit(int64_t NXY_Y, int64_t Y2,bool use_anneal,double I,bool inverse=false)
 {
     int bak_s=1;
     //完成对p-bit的一次更新
@@ -140,6 +140,9 @@ int p_bit::refresh_bit(int64_t NXY_Y, int64_t Y2,bool inverse=false)
     else
     {
         sigmoid_input=this->get_Ik1_double(NXY_Y, Y2);
+        //! Do the anneal thing
+        if(use_anneal)
+            sigmoid_input=sigmoid_input*I;
     }
     if((this_info.quitfy==false)||(this_info.sigmoid_approx==false))
     {

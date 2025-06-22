@@ -5,7 +5,7 @@
 //  Created by songyu li on 2025/1/1.
 //
 
-#define VERSION 1.4
+#define VERSION 2.0
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
@@ -61,6 +61,12 @@ p_bit_infos prepare_one_num(string* value,stringstream lss)
         n+=(1<<(24-ret.iregion_top[i]));
     }
     ret.fregion_top=1-float(n)/float(1<<24);
+    
+    //Deal with the new annealing
+    ret.fanneal_temp_start=stof(value[18]);
+    ret.fanneal_temp_end=stof(value[19]);
+    ret.anneal_steps=stoi(value[20]);
+//    cout<<"Anneal steps:"<<ret.anneal_steps<<endl;
     return ret;
 };
 
@@ -70,6 +76,19 @@ float one_num(int repeat,int64_t* output_data,p_bit_infos info)
     float back=0;
     for(int i=0;i<repeat;i++)
     {
+        //Deal with the annealing process
+        bool use_anneal_process=false;
+        if(info.sfa==false&&info.quitfy==false&&info.check_every_bit==false)
+            use_anneal_process=true;//
+        if(use_anneal_process)
+        {
+            cout<<"NOTE using annealing process"<<endl;
+            info.fback_temp=1;//!Anneal to zero temperature!
+        }
+        double I_inc=1.0/info.anneal_steps;
+        double I=0;
+        int right=0;
+        //
         //First initial all the p-bits
         p_bit A[MAX_AB_LEN-1];
         p_bit B[MAX_AB_LEN-1];
@@ -93,7 +112,7 @@ float one_num(int repeat,int64_t* output_data,p_bit_infos info)
                     ans_now=x0;
                     goto ready;
                 }
-                A[i].refresh_bit(N_XYY, Y2, true);
+                A[i].refresh_bit(N_XYY, Y2,use_anneal_process,I,true);
             }
             for(int i=0;i<info.output_length-1;i++)
             {
@@ -107,19 +126,34 @@ float one_num(int repeat,int64_t* output_data,p_bit_infos info)
                     ans_now=x0;
                     goto ready;
                 }
-                B[i].refresh_bit(N_XYY,Y2,true);
+                B[i].refresh_bit(N_XYY,Y2,use_anneal_process,I,true);
             }
             int64_t check_x=get_X(A,info.output_length);
             int64_t check_y=get_X(B,info.output_length);
             if((info.test_num-check_x*check_y==0))
             {
                 ans_now=check_x;
+                right=1;//Check every time!
                 goto ready;
+            }
+            if(use_anneal_process)
+            {
+                //First add the I
+                I+=I_inc;
+                if(step==info.anneal_steps)//End of the annealing process
+                {
+//                    if((info.test_num-check_x*check_y)==0)
+//                        right=1;
+                    goto ready;
+                }
             }
             step++;
         }
         ready:cout<<"Get answer:"<<ans_now<<"\t Iteration:"<<step<<endl;
-        back+=(float)step/(float)repeat;
+        if(use_anneal_process)
+            back+=(float)right/(float)repeat;
+        else
+            back+=(float)step/(float)repeat;
         output_data[i]=step;
     }
     return back;
@@ -127,8 +161,8 @@ float one_num(int repeat,int64_t* output_data,p_bit_infos info)
 
 
 int main(int argc, const char * argv[]) {
-    string profile_name[20];
-    string profile_val[20];
+    string profile_name[25];
+    string profile_val[25];
     string input_profile_name="C_sim/paras.csv";
     read_config(input_profile_name,profile_name,profile_val);
     //prepare output folder
