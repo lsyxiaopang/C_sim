@@ -11,7 +11,7 @@ np.savetxt("prob_"+data_file_name,ans,delimiter=",")
 
 err07=np.abs(ans[:,0]-0.7)
 ind=np.argmin(err07)
-print(F"ITS0.7 at p={ans[ind,0]}, with ITS={ans[ind,1]}")
+print(F"ITS0.7 at p={ans[ind,0]}, with ITS={ans[ind,1]:.2e}")
 
 # import matplotlib.pyplot as plt
 # plt.plot(ans)
