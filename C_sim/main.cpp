@@ -5,7 +5,7 @@
 //  Created by songyu li on 2025/1/1.
 //
 
-#define VERSION 1.4
+#define VERSION 1.5
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
@@ -175,8 +175,8 @@ int main(int argc, const char * argv[]) {
             }
             //Output mean and other stuff
             data_output_file<<mean;
-//            for(int i=0;i<repeat_times;i++)
-//                data_output_file<<","<<back_count[i];
+            for(int i=0;i<repeat_times;i++)
+                data_output_file<<","<<back_count[i];
             data_output_file<<endl;
             cout<<"One line complete!"<<mean<<endl;
 

@@ -10,7 +10,7 @@
 
 #define STRINGIFY(x) #x
 #define MVTS(x) STRINGIFY(x)
-#define VERSION 0.5
+#define VERSION 1.5
 //该文件中定义各类运行中会用到的参数，以方便修改
 #define P_test_num 497718901
 #define P_output_file_name "S_12337337_no_qutify_SFA.txt"
