@@ -4,7 +4,7 @@ import time
 from threading import Timer
 from loguru import logger
 
-toml_name="FPGACodeResults/Running/Test/612/testinfo.toml"
+toml_name="FPGACodeResults/Running/Test/623/testinfo.toml"
 toml_file=open(toml_name,"rb")
 config_data=tomllib.load(toml_file)
 #*读取基本数据
