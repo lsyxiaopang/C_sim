@@ -1,5 +1,5 @@
 import numpy as np
-data_file_name="4-5_11-12_58_44.csv"
+data_file_name="4,5;11,12;25_22.csv"
 
 array=np.loadtxt(data_file_name,delimiter=",")
 print(array.shape)
